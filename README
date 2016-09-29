@@ -1,0 +1,17 @@
+#################
+## James Warden - 2016
+## Hello, and thank you for checking out my GitHub samples.
+## The following PHP files are as follows:
+## friends.php - mini-social networking section of root2020.com
+## datafeed.php - functions that work with the calendar on root2020.com
+## gps.php - gps functions that narrow location down to database entries
+## index.php - a simple ebay resell script I threw together in about 10-15 minutes
+## (try doing a search at ebayhunter.root2020.com)
+##
+## The following Linux file(s) are as follows:
+## .bash_history
+## 1) setting up a LAMP server from the command line on Fedora
+## 2) ensuring the java virtual machine is set to the latest version (in case we need it)
+## 3) configuring iptables for the new installation
+##
+#################
