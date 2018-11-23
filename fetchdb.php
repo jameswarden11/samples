@@ -260,7 +260,7 @@ global $seasonid;
 global $normalizeChars;
 $league2 = strtoupper($league);
 global $connection;
-$sql = "SELECT DISTINCT Name, Id FROM fantasylig_team WHERE Id >=\"345\" AND league=\"$league2\" AND leagueseasonid=\"$seasonid\" ORDER BY Id DESC"; 
+$sql = "SELECT DISTINCT Name, Id FROM ff_team WHERE Id >=\"345\" AND league=\"$league2\" AND leagueseasonid=\"$seasonid\" ORDER BY Id DESC"; 
 $result = @mysql_query($sql, $connection) or die("Error");
 echo mysql_error();
 $officialteams[0] = "";
@@ -354,14 +354,14 @@ $latestweek = "";
 $latestgame = max($timestamps);
 $earliestgame = min($timestamps);
 /* check to see if game schedule is already in the database for that league */
-$query1 = "SELECT Id, StartDate, EndDate FROM fantasylig_week WHERE StartDate >= \"$startdate\" ORDER BY StartDate ASC";
+$query1 = "SELECT Id, StartDate, EndDate FROM ff_week WHERE StartDate >= \"$startdate\" ORDER BY StartDate ASC";
 $result = @mysql_query($query1, $connection) or die("Error connection 2");
 print "Matching $games2 games with DB teams..<br>";
 while ($row=mysql_fetch_array($result)) {
 $latestweek = $row["EndDate"];
 $earliestweek = $row["StartDate"];
 $weekid = $row["Id"];
-$query2 = "SELECT * FROM fantasylig_game WHERE WeekId=\"$weekid\" AND LeagueSeasonId=\"$seasonid\"";
+$query2 = "SELECT * FROM ff_game WHERE WeekId=\"$weekid\" AND LeagueSeasonId=\"$seasonid\"";
 $result2 = @mysql_query($query2, $connection) or die("Error connection 21");
 if (mysql_num_rows($result2) == 0) {
 for ($i=0;$i<count($timestamps);$i++) {
@@ -382,7 +382,7 @@ print "One of the teams $hometeama or $awayteama did not match DB records.<br>";
 }
 
 if ($cron == "1" && $nomatch == "0") {
-$query3="INSERT INTO fantasylig_game (League,LeagueSeasonId, WeekId,StartDateTime, HomeTeamId, AwayTeamId, Score) VALUES (\"$league2\",\"$seasonid\",\"$weekid\",\"$timestamps[$i]\", \"$hometeamida\",\"$awayteamida\",\"0:0\");";
+$query3="INSERT INTO ff_game (League,LeagueSeasonId, WeekId,StartDateTime, HomeTeamId, AwayTeamId, Score) VALUES (\"$league2\",\"$seasonid\",\"$weekid\",\"$timestamps[$i]\", \"$hometeamida\",\"$awayteamida\",\"0:0\");";
 $result3 = @mysql_query($query3, $connection) or die("Error updating");
 ##echo mysql_error();
 ##print $query3;
@@ -398,7 +398,7 @@ print "Games already exist for $earliestweek - $latestweek (ID:$weekid)<br>";
 }
 if ($cron != "1") {
 print "Matched $matches of $games2 games to teams.<br>";
-print "</font><font face=\"Arial\" color=\"black\"><b>Update link: <a href=\"http://www.fantasylig.com/autodl/cronupdater2.php?league=$league&type=1&override=1&cron=1\">Click Here to manually update the games database.</font></a></b><br>";
+print "</font><font face=\"Arial\" color=\"black\"><b>Update link: <a href=\"http://$path/autodl/cronupdater2.php?league=$league&type=1&override=1&cron=1\">Click Here to manually update the games database.</font></a></b><br>";
 } else {
 print "<b>Added $matches games to schedule.</b><br>";
 }
@@ -637,7 +637,7 @@ $minutes++;
 function getposition($playerid) {
 global $connection;
 $theposition = "unknown";
-$sql = "SELECT position FROM fantasylig_player WHERE fantasylig_player.Id=\"$playerid\"";
+$sql = "SELECT position FROM ff_player WHERE ff_player.Id=\"$playerid\"";
 $result = @mysql_query($sql, $connection) or die("Fetch position Error");
 while ($row=mysql_fetch_array($result)) {
 $theposition = $row["position"];
@@ -774,7 +774,7 @@ $hometeamid2 = $hometeamsid[$ref];
 $awayteamid2 = $awayteamsid[$ref];
 if (strlen($lastname) > 1) {
 $playermins[$ref][$stats1] = getplayerminutes($lastname);
-$sql = "SELECT Name, Id, TeamId FROM fantasylig_player WHERE fantasylig_player.TeamId=\"$hometeamid2\" OR fantasylig_player.TeamId=\"$awayteamid2\"";
+$sql = "SELECT Name, Id, TeamId FROM ff_player WHERE ff_player.TeamId=\"$hometeamid2\" OR ff_player.TeamId=\"$awayteamid2\"";
 $result = @mysql_query($sql, $connection) or die("Fetch DB Error");
 ##print $sql . ":" . mysql_num_rows($result) . "<br>";
 ##echo mysql_error();
@@ -822,7 +822,7 @@ $teamid[$ref][$stats1] = $awayteamid2;
 
 // if team wasnt matching, try a different one
 if ($team[$ref][$stats1] == "Unknown") {
-$sql2 = "SELECT Id, Name from fantasylig_team WHERE Id=\"" . $row["TeamId"] . "\"";
+$sql2 = "SELECT Id, Name from ff_team WHERE Id=\"" . $row["TeamId"] . "\"";
 $result2 = @mysql_query($sql2, $connection);
 while ($row2=mysql_fetch_array($result2)) {
 $team[$ref][$stats1] = $row2["Name"];
@@ -837,7 +837,7 @@ break;
 
 if ($nomatch == 1) {
 ##print "No match found for $lastname..Recovering..<br>";
-$sql = "SELECT fantasylig_player.Name, fantasylig_player.Id, fantasylig_player.TeamId FROM fantasylig_player, fantasylig_team WHERE fantasylig_team.Id=fantasylig_player.TeamId AND fantasylig_team.leagueseasonId=\"$seasonid\" ORDER BY TeamId DESC";
+$sql = "SELECT ff_player.Name, ff_player.Id, ff_player.TeamId FROM ff_player, ff_team WHERE ff_team.Id=ff_player.TeamId AND ff_team.leagueseasonId=\"$seasonid\" ORDER BY TeamId DESC";
 $result = @mysql_query($sql, $connection) or die("Fetch DB Error");
 ##print $sql . ":" . mysql_num_rows($result) . "<br>";
 ##echo mysql_error();
@@ -876,7 +876,7 @@ if ($row["TeamId"] == $awayteamid2) {
 $team[$ref][$stats1] = $awayteams[$ref];
 } 
 if ($team[$ref][$stats1] == "Unknown") {
-$sql2 = "SELECT Name from fantasylig_team WHERE Id=\"" . $row["TeamId"] . "\"";
+$sql2 = "SELECT Name from ff_team WHERE Id=\"" . $row["TeamId"] . "\"";
 $result2 = @mysql_query($sql2, $connection);
 while ($row2=mysql_fetch_array($result2)) {
 $team[$ref][$stats1] = $row2["Name"];
