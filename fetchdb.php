@@ -1,9 +1,10 @@
 <?
 
 /* 
-
-Fetch statistics from soccer24.com for FantasyLig
-Developed March 2018
+Fetch soccer statistics
+Developed 2017
+James Warden
+Note: $path is not assigned
 
 */
 
@@ -14,7 +15,7 @@ function file_get_contents_curl($url) {
     curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_REFERER, 'https://www.soccer24.com/match/4rE9KKVd/#player-statistics;0');
+curl_setopt($ch, CURLOPT_REFERER, 'https://$path/4rE9KKVd/#player-statistics;0');
 curl_setopt($ch, CURLOPT_HTTPHEADER, array(
     'X-Fsign: SW9D1eZo'
     ));
@@ -29,10 +30,7 @@ curl_setopt( $ch, CURLOPT_COOKIEFILE, 'blah.txt' );
     return $data;
 }
 
-## referer:
-##https://www.soccer24.com/match/4rE9KKVd/#player-statistics;0	
-## feed url:
-##https://d.soccer24.com/x/feed/d_ps_4rE9KKVd_en_2
+
 function startdownload($league, $week) {
 global $objPHPExcel;
 global $rowCount;
@@ -76,16 +74,16 @@ $path = "fixtures";
 }
  
 if ($league == "epl") {
-getgames("https://www.soccer24.com/england/premier-league/$path/", $league, $week, $type);
+getgames("https://$path/epl/", $league, $week, $type);
 }
 if ($league == "laliga") {
-getgames("https://www.soccer24.com/spain/laliga/$path/", $league, $week, $type);
+getgames("https://$path/laliga/", $league, $week, $type);
 }
 if ($league == "mls") {
-getgames("https://www.soccer24.com/usa/mls/$path/", $league, $week, $type);
+getgames("https://$path/mls/", $league, $week, $type);
 }
 if ($league == "npfl") {
-getgames("https://www.soccer24.com/nigeria/npfl/$path/", $league, $week, $type);
+getgames("https://$path/npfl", $league, $week, $type);
 }
 }
 $urlkeys[0] = "";
@@ -580,7 +578,7 @@ if ($tempdate >= $startdate && $tempdate <= $enddate) {
 $latestgames[$latest] = $timestamps[$x];
 $latest++;
 print "($timestamps[$x]) $hometeams[$x] versus $awayteams[$x]..";
-$statsurl = "https://d.soccer24.com/x/feed/d_ps_" . $urlkeys[$x] . "_en_2";
+$statsurl = "https://$path/feed" . $urlkeys[$x] . "_en_2";
 getminutes($urlkeys[$x], $x);
 getstats($statsurl, $x, $league, $week);
 $totalgames++;
@@ -648,7 +646,7 @@ return $theposition;
 }
 
 function getminutes($ukey, $ref) {
-$surl = "https://d.soccer24.com/x/feed/d_li_$ukey" . "_en_2";
+$surl = "https://$path/feed/d_li_$ukey" . "_en_2";
 ##print "Fetching substitution stats from $surl" . "...\n";
 ##$tdata = explode("<tr class=", file_get_contents_curl($purl));
 $tdata = explode("<td colspan=\"2\" class=\"h-part\">", file_get_contents_curl($surl));
