@@ -6,7 +6,7 @@
 ## datafeed.php - functions that work with the calendar on root2020.com (note: has since been updated to use strtotime)
 ## gps.php - gps functions that narrow location down to database entries
 ## index.php - a simple ebay resell script I threw together in about 10-15 minutes
-## fetchdb.php - a soccer statistics scraper
+## fetchdb.php - a soccer statistics parser
 ##
 ## The following Linux file(s) are as follows:
 ## .bash_history
